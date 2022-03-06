@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<link rel="stylesheet" href="styles.css">
+	</head>
+	<body>
+		<script src="../01 - Hello Cube/js/three.js"></script>
+		<script>
+			const scene = new THREE.Scene();
+			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+			const renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			const radius = 3;  // ui: radius
+			const height = 2;  // ui: height
+			const radialSegments = 64;  // ui: radialSegments
+			const geometry = new THREE.ConeGeometry(radius, height, radialSegments);
+			const material = new THREE.MeshPhongMaterial({
+			  color: 0xFF0000,    // red (can also use a CSS color string here)
+			  flatShading: true,
+			});
+			const cone = new THREE.Mesh( geometry, material );
+			scene.add( cone );
+
+
+			const color = 0x33ff66;
+			const intensity = .5;
+			const light = new THREE.PointLight(color, intensity);
+			light.position.set(0, 0, -20);
+			const light2 = new THREE.PointLight(color, intensity);
+			light.position.set(0, 0, 20);
+
+			scene.add(light);
+			scene.add(light2);
+
+			camera.position.z = 5;
+			let t = 0;
+			function animate() {
+				t += 0.01
+				requestAnimationFrame( animate );
+
+				cone.rotation.x += 0.01;
+				cone.rotation.y += 0.01;
+				cone.rotation.z += 0.01;
+
+				cone.position.y = Math.cos(cone.position.y)
+
+				light.position.z = Math.cos(t)*6
+				light.position.y = Math.sin(t)*6
+				light2.position.z = Math.cos(t)*6
+				light2.position.y = Math.sin(t)*6
+				renderer.render( scene, camera );
+			};
+
+			animate();
+		</script>
+	</body>
+</html>
